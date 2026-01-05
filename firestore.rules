@@ -1,0 +1,68 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user is the owner
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // ========================================================================
+    // USERS COLLECTION
+    // ========================================================================
+    match /users/{userId} {
+      // Users can read their own profile
+      allow read: if isOwner(userId);
+      
+      // Users can create/update their own profile
+      allow create, update: if isOwner(userId);
+      
+      // No one can delete user profiles (handle via admin SDK if needed)
+      allow delete: if false;
+    }
+    
+    // ========================================================================
+    // TT_SESSIONS COLLECTION
+    // ========================================================================
+    match /tt_sessions/{sessionId} {
+      // Users can read their own sessions
+      allow read: if isAuthenticated() && 
+                     resource.data.userId == request.auth.uid;
+      
+      // Users can create their own sessions
+      allow create: if isAuthenticated() && 
+                       request.resource.data.userId == request.auth.uid;
+      
+      // Users can update their own sessions
+      allow update: if isAuthenticated() && 
+                       resource.data.userId == request.auth.uid;
+      
+      // Users can delete their own sessions
+      allow delete: if isAuthenticated() && 
+                       resource.data.userId == request.auth.uid;
+    }
+    
+    // ========================================================================
+    // USER_PROGRESS COLLECTION
+    // ========================================================================
+    match /user_progress/{progressId} {
+      // Users can read their own progress
+      allow read: if isAuthenticated() && 
+                     resource.data.userId == request.auth.uid;
+      
+      // Users can create/update their own progress
+      allow create, update: if isAuthenticated() && 
+                               request.resource.data.userId == request.auth.uid;
+      
+      // Users can delete their own progress
+      allow delete: if isAuthenticated() && 
+                       resource.data.userId == request.auth.uid;
+    }
+  }
+}

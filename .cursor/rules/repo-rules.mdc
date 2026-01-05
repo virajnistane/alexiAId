@@ -1,0 +1,100 @@
+---
+alwaysApply: true
+---
+
+# Next.js Minimal Starter - Code Style Guidelines
+
+## Project Overview
+
+This is a Next.js 16+ App Router application with React 19, TypeScript, Tailwind CSS 4, and shadcn/ui components.
+It integrates ToughTongue AI for voice-based personality assessments and coaching.
+
+## File Organization
+
+### Page Structure
+
+- Keep related components in the same file unless the file exceeds ~400 lines
+- For larger features (like admin), split into a directory with:
+  - `page.tsx` - Main entry point with core logic
+  - `ComponentName.tsx` - Feature-specific components
+  - `utils.ts` - Helper functions
+- Components within a page file should follow this order:
+  1. Main exported component
+  2. Sub-components (grouped by section with comment headers)
+
+### Component Guidelines
+
+- Use `"use client"` directive only when needed (hooks, interactivity)
+- Extract reusable components to `components/` directory
+- Keep page-specific components in the page file
+
+## Documentation
+
+### File-Level Docstrings
+
+Every page and component file should have a docstring at the top:
+
+```typescript
+/**
+ * Component/Page Name
+ *
+ * Brief description of what this file does.
+ *
+ * Features/Flow/Sections: (as appropriate)
+ * - Feature 1
+ * - Feature 2
+ */
+```
+
+### Function/Component Comments
+
+- Add brief JSDoc comments above significant functions
+- Use section separators for component groups:
+
+```typescript
+// =============================================================================
+// Section Name
+// =============================================================================
+
+/** Brief description of this component */
+function MyComponent() { ... }
+```
+
+## Code Style
+
+### TypeScript
+
+- Use explicit types for props interfaces
+- Prefer `type` for simple types, `interface` for objects with methods
+- Use `type ComponentProps = { ... }` pattern for component props
+
+### React Patterns
+
+- Use conditional rendering with `{condition ? <Component /> : null}`
+- Prefer early returns for guard clauses
+- Keep hooks at the top of components
+
+### Tailwind CSS
+
+- Use the project's color scheme: teal-500/600 primary, cyan accents
+- Follow existing patterns for cards, buttons, and layouts
+- Use `bg-card`, `border-border`, `text-foreground` for theme compatibility
+
+## State Management
+
+- Use Zustand store (`lib/store.ts`) for persistent app state
+- Use local `useState` for UI-only state
+- Access store with selectors: `useAppStore((s) => s.specificField)`
+
+## API Routes
+
+- Place in `app/api/` with clear route naming
+- Add file-level docstrings explaining the endpoint
+- Use `lib/auth.ts` for admin route protection
+
+## Naming Conventions
+
+- Files: PascalCase for components, camelCase for utilities
+- Components: PascalCase (e.g., `SessionsCard`)
+- Functions: camelCase (e.g., `fetchSession`)
+- Constants: SCREAMING_SNAKE_CASE (e.g., `SCENARIOS`)
