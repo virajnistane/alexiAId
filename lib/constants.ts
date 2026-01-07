@@ -13,7 +13,9 @@ export const ROUTES = {
   HOME: "/",
   TEST: "/test",
   RESULTS: "/results",
+  JOURNAL: "/journal",
   COACH: "/coach",
+  SETTINGS: "/settings",
   ADMIN: "/admin",
   SIGNIN: "/auth/signin",
 } as const;

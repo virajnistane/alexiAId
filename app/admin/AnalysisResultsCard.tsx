@@ -23,7 +23,7 @@ export function AnalysisResultsCard({ result, error }: AnalysisResultsCardProps)
     <Card className="mb-6 bg-card border-border">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <FileText className="h-5 w-5 text-teal-400" />
+          <FileText className="h-5 w-5 text-purple-400" />
           Analysis Results
         </CardTitle>
       </CardHeader>

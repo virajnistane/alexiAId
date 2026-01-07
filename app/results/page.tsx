@@ -224,7 +224,7 @@ function ResultsContent() {
           description="Take a personality test to see your results here"
         >
           <Link href={ROUTES.TEST}>
-            <Button className="bg-teal-600 hover:bg-teal-700">
+            <Button className="bg-purple-600 hover:bg-purple-700">
               <Play className="h-4 w-4 mr-2" />
               Take the Test
             </Button>
@@ -394,7 +394,7 @@ function SessionRow({
   return (
     <tr
       className={`border-b border-border/50 cursor-pointer hover:bg-muted/50 ${
-        isSelected ? "bg-teal-500/10" : ""
+        isSelected ? "bg-purple-500/10" : ""
       }`}
       onClick={onSelect}
     >
@@ -567,7 +567,7 @@ function SessionInfoCard({
               <Button
                 onClick={onAnalyze}
                 disabled={isAnalyzing}
-                className="bg-teal-600 hover:bg-teal-700"
+                className="bg-purple-600 hover:bg-purple-700"
               >
                 {isAnalyzing ? (
                   <>
@@ -634,12 +634,12 @@ function PersonalityResultsSection({ reportCard }: { reportCard: ReportCardItem[
 
 function PersonalityTypeCard({ type, typeNote }: { type: string; typeNote: string | null }) {
   return (
-    <Card className="bg-gradient-to-br from-teal-500/20 to-cyan-500/10 border-teal-500/30">
+    <Card className="bg-gradient-to-br from-teal-500/20 to-cyan-500/10 border-purple-500/30">
       <CardHeader className="text-center pb-4">
-        <div className="mx-auto mb-4 h-20 w-20 rounded-full bg-teal-500/20 flex items-center justify-center">
-          <User className="h-10 w-10 text-teal-400" />
+        <div className="mx-auto mb-4 h-20 w-20 rounded-full bg-purple-500/20 flex items-center justify-center">
+          <User className="h-10 w-10 text-purple-400" />
         </div>
-        <CardTitle className="text-4xl font-bold text-teal-400">{type}</CardTitle>
+        <CardTitle className="text-4xl font-bold text-purple-400">{type}</CardTitle>
         <CardDescription className="text-lg mt-2">Your Personality Type</CardDescription>
       </CardHeader>
       {typeNote ? (
@@ -679,7 +679,7 @@ function DimensionItem({ item }: { item: ReportCardItem }) {
       <div className="flex items-center justify-between mb-2">
         <div>
           <p className="text-sm text-muted-foreground">{info.label}</p>
-          <p className="text-xl font-semibold text-teal-400">{item.score_str}</p>
+          <p className="text-xl font-semibold text-purple-400">{item.score_str}</p>
         </div>
       </div>
       <p className="text-xs text-muted-foreground">{info.description}</p>
@@ -812,11 +812,11 @@ function TranscriptLine({ line }: { line: string }) {
   return (
     <div
       className={`p-3 rounded-lg text-sm ${
-        isAI ? "bg-teal-500/10 border border-teal-500/20" : "bg-background border border-border"
+        isAI ? "bg-purple-500/10 border border-purple-500/20" : "bg-background border border-border"
       }`}
     >
       <div className="flex items-center gap-2 mb-1">
-        <span className={`text-xs font-medium ${isAI ? "text-teal-400" : "text-muted-foreground"}`}>
+        <span className={`text-xs font-medium ${isAI ? "text-purple-400" : "text-muted-foreground"}`}>
           {role === "AI" ? "Dr. Sarah Chen" : "You"}
         </span>
         <span className="text-xs text-muted-foreground">{timestamp}</span>

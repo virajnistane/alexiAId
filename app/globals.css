@@ -9,121 +9,123 @@
  * Design System Color Tokens
  * Using OKLCH for perceptually uniform colors
  * 
- * Light theme: Clean whites with subtle grays
- * Dark theme: Soft slate (not pure black) with teal accents
+ * Emotion-Focused Theme:
+ * Light theme: Warm, soft colors for comfort and approachability
+ * Dark theme: Calming purples and soft blues for emotional warmth
+ * Accents: Gradients representing emotional spectrum
  */
 
 :root {
   /* Base radius for consistent border-radius */
-  --radius: 0.625rem;
+  --radius: 0.75rem;
 
-  /* Light theme colors */
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.15 0 0);
+  /* Light theme colors - warm and approachable */
+  --background: oklch(0.98 0.01 50);
+  --foreground: oklch(0.2 0.02 280);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0 0);
+  --card-foreground: oklch(0.2 0.02 280);
 
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0 0);
+  --popover-foreground: oklch(0.2 0.02 280);
 
-  --primary: oklch(0.55 0.15 190);
+  --primary: oklch(0.62 0.18 280);
   --primary-foreground: oklch(0.98 0 0);
 
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0.2 0 0);
+  --secondary: oklch(0.95 0.02 50);
+  --secondary-foreground: oklch(0.25 0.02 280);
 
-  --muted: oklch(0.96 0.005 260);
-  --muted-foreground: oklch(0.45 0.01 260);
+  --muted: oklch(0.94 0.015 280);
+  --muted-foreground: oklch(0.48 0.02 280);
 
-  --accent: oklch(0.96 0.02 190);
-  --accent-foreground: oklch(0.2 0 0);
+  --accent: oklch(0.93 0.04 320);
+  --accent-foreground: oklch(0.25 0.02 280);
 
   --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(0.98 0 0);
 
-  --border: oklch(0.9 0.005 260);
-  --input: oklch(0.9 0.005 260);
-  --ring: oklch(0.55 0.15 190);
+  --border: oklch(0.88 0.01 280);
+  --input: oklch(0.88 0.01 280);
+  --ring: oklch(0.62 0.18 280);
 
-  /* Chart colors - vibrant and accessible */
-  --chart-1: oklch(0.65 0.2 40);
-  --chart-2: oklch(0.6 0.12 185);
-  --chart-3: oklch(0.55 0.15 145);
-  --chart-4: oklch(0.7 0.18 85);
-  --chart-5: oklch(0.6 0.2 300);
+  /* Chart colors - emotional spectrum */
+  --chart-1: oklch(0.65 0.2 340);
+  --chart-2: oklch(0.6 0.15 260);
+  --chart-3: oklch(0.6 0.18 180);
+  --chart-4: oklch(0.7 0.16 120);
+  --chart-5: oklch(0.68 0.18 40);
 
   /* Sidebar */
-  --sidebar: oklch(0.98 0 0);
-  --sidebar-foreground: oklch(0.15 0 0);
-  --sidebar-primary: oklch(0.55 0.15 190);
+  --sidebar: oklch(0.98 0.01 50);
+  --sidebar-foreground: oklch(0.2 0.02 280);
+  --sidebar-primary: oklch(0.62 0.18 280);
   --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.96 0.02 190);
-  --sidebar-accent-foreground: oklch(0.2 0 0);
-  --sidebar-border: oklch(0.9 0.005 260);
-  --sidebar-ring: oklch(0.55 0.15 190);
+  --sidebar-accent: oklch(0.93 0.04 320);
+  --sidebar-accent-foreground: oklch(0.25 0.02 280);
+  --sidebar-border: oklch(0.88 0.01 280);
+  --sidebar-ring: oklch(0.62 0.18 280);
 }
 
 .dark {
   /*
-   * Dark Theme
-   * Background: Soft slate/charcoal (not pure black) for reduced eye strain
-   * Cards: Noticeably lighter than background for clear visual hierarchy
-   * Accent: Teal - modern, calming, associated with growth
+   * Dark Theme - Emotional Warmth
+   * Background: Deep calming blue-purple for emotional comfort
+   * Cards: Warmer elevation for approachability
+   * Accent: Soft purple-pink spectrum for emotional connection
    */
 
-  /* Core backgrounds - creating visual depth */
-  --background: oklch(0.14 0.01 260);
-  --foreground: oklch(0.92 0.01 260);
+  /* Core backgrounds - creating emotional depth */
+  --background: oklch(0.16 0.03 280);
+  --foreground: oklch(0.94 0.01 280);
 
-  /* Cards: 25% lighter than background for clear contrast */
-  --card: oklch(0.22 0.015 260);
-  --card-foreground: oklch(0.92 0.01 260);
+  /* Cards: Warmer with subtle purple tint */
+  --card: oklch(0.24 0.04 285);
+  --card-foreground: oklch(0.94 0.01 280);
 
-  --popover: oklch(0.2 0.015 260);
-  --popover-foreground: oklch(0.92 0.01 260);
+  --popover: oklch(0.22 0.04 285);
+  --popover-foreground: oklch(0.94 0.01 280);
 
-  /* Primary: Teal - vibrant but not harsh */
-  --primary: oklch(0.7 0.14 185);
-  --primary-foreground: oklch(0.12 0.02 185);
+  /* Primary: Soft purple for emotional warmth */
+  --primary: oklch(0.72 0.16 290);
+  --primary-foreground: oklch(0.98 0 0);
 
-  /* Secondary: Slightly elevated from background */
-  --secondary: oklch(0.26 0.015 260);
-  --secondary-foreground: oklch(0.92 0.01 260);
+  /* Secondary: Slightly elevated with warmth */
+  --secondary: oklch(0.28 0.04 285);
+  --secondary-foreground: oklch(0.94 0.01 280);
 
-  /* Muted: For subtle backgrounds and disabled states */
-  --muted: oklch(0.22 0.01 260);
-  --muted-foreground: oklch(0.55 0.02 260);
+  /* Muted: For subtle backgrounds */
+  --muted: oklch(0.24 0.03 280);
+  --muted-foreground: oklch(0.58 0.03 285);
 
-  /* Accent: Teal tint for hover states */
-  --accent: oklch(0.26 0.04 185);
-  --accent-foreground: oklch(0.92 0.01 260);
+  /* Accent: Pink-purple for emotional highlights */
+  --accent: oklch(0.28 0.08 320);
+  --accent-foreground: oklch(0.94 0.01 280);
 
-  /* Destructive: Accessible red */
-  --destructive: oklch(0.6 0.2 25);
+  /* Destructive: Warm red with care */
+  --destructive: oklch(0.62 0.2 30);
   --destructive-foreground: oklch(0.98 0 0);
 
-  /* Borders: Visible but subtle */
-  --border: oklch(0.32 0.015 260);
-  --input: oklch(0.22 0.015 260);
-  --ring: oklch(0.7 0.14 185);
+  /* Borders: Subtle with purple tint */
+  --border: oklch(0.34 0.04 285);
+  --input: oklch(0.24 0.04 285);
+  --ring: oklch(0.72 0.16 290);
 
-  /* Charts: Vibrant colors for data visualization */
-  --chart-1: oklch(0.7 0.14 185);
-  --chart-2: oklch(0.68 0.12 155);
-  --chart-3: oklch(0.72 0.15 85);
-  --chart-4: oklch(0.62 0.16 280);
-  --chart-5: oklch(0.65 0.18 30);
+  /* Charts: Emotional spectrum colors */
+  --chart-1: oklch(0.7 0.16 320);
+  --chart-2: oklch(0.68 0.14 270);
+  --chart-3: oklch(0.7 0.16 180);
+  --chart-4: oklch(0.72 0.15 140);
+  --chart-5: oklch(0.68 0.18 50);
 
   /* Sidebar: Slightly different from main bg */
-  --sidebar: oklch(0.16 0.01 260);
-  --sidebar-foreground: oklch(0.92 0.01 260);
-  --sidebar-primary: oklch(0.7 0.14 185);
-  --sidebar-primary-foreground: oklch(0.12 0.02 185);
-  --sidebar-accent: oklch(0.24 0.015 260);
-  --sidebar-accent-foreground: oklch(0.92 0.01 260);
-  --sidebar-border: oklch(0.3 0.015 260);
-  --sidebar-ring: oklch(0.7 0.14 185);
+  --sidebar: oklch(0.18 0.03 280);
+  --sidebar-foreground: oklch(0.94 0.01 280);
+  --sidebar-primary: oklch(0.72 0.16 290);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.26 0.04 285);
+  --sidebar-accent-foreground: oklch(0.94 0.01 280);
+  --sidebar-border: oklch(0.32 0.04 285);
+  --sidebar-ring: oklch(0.72 0.16 290);
 }
 
 /*

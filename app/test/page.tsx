@@ -141,7 +141,7 @@ function TestCompletedView({ onRetake }: { onRetake: () => void }) {
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           <Link href={ROUTES.RESULTS}>
-            <Button className="w-full bg-teal-600 hover:bg-teal-700">
+            <Button className="w-full bg-purple-600 hover:bg-purple-700">
               View My Progress
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
@@ -203,7 +203,7 @@ function TestLandingView({
 
       <Card className="max-w-lg mx-auto bg-card border-border">
         <CardHeader className="text-center">
-          <Brain className="mx-auto h-12 w-12 text-teal-400 mb-4" />
+          <Brain className="mx-auto h-12 w-12 text-purple-400 mb-4" />
           <CardTitle className="text-xl">
             {hasExistingSessions
               ? "Continue Your Journey"
@@ -218,7 +218,7 @@ function TestLandingView({
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
-          <Button onClick={onStartTest} size="lg" className="w-full bg-teal-600 hover:bg-teal-700">
+          <Button onClick={onStartTest} size="lg" className="w-full bg-purple-600 hover:bg-purple-700">
             <Play className="h-5 w-5 mr-2" />
             {hasExistingSessions ? "Start New Assessment" : "Begin Assessment"}
           </Button>

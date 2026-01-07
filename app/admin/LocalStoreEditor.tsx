@@ -81,14 +81,14 @@ export function LocalStoreEditor() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Database className="h-5 w-5 text-teal-400" />
+            <Database className="h-5 w-5 text-purple-400" />
             <CardTitle>Local Store Editor</CardTitle>
           </div>
           <Button
             onClick={handleSave}
             disabled={storeSaved}
             size="sm"
-            className="bg-teal-600 hover:bg-teal-700"
+            className="bg-purple-600 hover:bg-purple-700"
           >
             {storeSaved ? <Check className="h-4 w-4 mr-1" /> : <Save className="h-4 w-4 mr-1" />}
             {storeSaved ? "Saved" : "Save"}

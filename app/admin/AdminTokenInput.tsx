@@ -62,8 +62,8 @@ export function AdminTokenInput({ variant = "full", onTokenSet }: AdminTokenInpu
     <Card className="w-full max-w-md bg-card border-border">
       <CardHeader>
         <div className="flex items-center justify-center mb-4">
-          <div className="rounded-full bg-teal-500/20 p-3">
-            <Lock className="h-8 w-8 text-teal-400" />
+          <div className="rounded-full bg-purple-500/20 p-3">
+            <Lock className="h-8 w-8 text-purple-400" />
           </div>
         </div>
         <CardTitle className="text-center text-foreground">Admin Access</CardTitle>
@@ -81,7 +81,7 @@ export function AdminTokenInput({ variant = "full", onTokenSet }: AdminTokenInpu
           />
           <Button
             type="submit"
-            className="w-full bg-teal-600 hover:bg-teal-700"
+            className="w-full bg-purple-600 hover:bg-purple-700"
             disabled={!input.trim()}
           >
             <Key className="h-4 w-4 mr-2" />

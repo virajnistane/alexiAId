@@ -191,7 +191,7 @@ export default function CoachPage() {
 function LoadingView() {
   return (
     <div className="container mx-auto px-4 py-20 text-center">
-      <Loader2 className="mx-auto h-8 w-8 animate-spin text-teal-500" />
+      <Loader2 className="mx-auto h-8 w-8 animate-spin text-purple-500" />
       <p className="mt-4 text-muted-foreground">Loading...</p>
     </div>
   );
@@ -223,7 +223,7 @@ function AssessmentRequiredView({ onStartAssessment }: { onStartAssessment: () =
         <CardContent className="space-y-4">
           <HowItWorksBox />
           <div className="flex gap-3">
-            <Button onClick={onStartAssessment} className="flex-1 bg-teal-600 hover:bg-teal-700">
+            <Button onClick={onStartAssessment} className="flex-1 bg-purple-600 hover:bg-purple-700">
               <Play className="h-4 w-4 mr-2" />
               Start Assessment
             </Button>
@@ -344,14 +344,14 @@ function CoachLandingView({
 
       <Card className="max-w-lg mx-auto bg-card border-border">
         <CardHeader className="text-center">
-          <MessageCircle className="mx-auto h-12 w-12 text-teal-400 mb-4" />
+          <MessageCircle className="mx-auto h-12 w-12 text-purple-400 mb-4" />
           <CardTitle>Ready to Start Coaching?</CardTitle>
           <CardDescription>
             Your AI coach understands your emotional profile and will provide tailored guidance
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center">
-          <Button onClick={onStartCoach} size="lg" className="bg-teal-600 hover:bg-teal-700">
+          <Button onClick={onStartCoach} size="lg" className="bg-purple-600 hover:bg-purple-700">
             <Play className="h-5 w-5 mr-2" />
             Start Coach Session
           </Button>
@@ -365,13 +365,13 @@ function PersonalityProfileCard({ assessment }: { assessment: string | null }) {
   if (!assessment) return null;
 
   return (
-    <Card className="mb-6 border-teal-500/30 bg-teal-500/10">
+    <Card className="mb-6 border-purple-500/30 bg-purple-500/10">
       <CardHeader>
         <div className="flex items-center gap-2">
           <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
-          <CardTitle className="text-teal-400">Your Emotion Awareness Profile</CardTitle>
+          <CardTitle className="text-purple-400">Your Emotion Awareness Profile</CardTitle>
         </div>
-        <CardDescription className="text-teal-300/80">
+        <CardDescription className="text-purple-300/80">
           Your coach will use this to provide personalized guidance on understanding emotions
         </CardDescription>
       </CardHeader>

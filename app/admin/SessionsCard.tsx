@@ -209,7 +209,7 @@ function SessionRow({
   return (
     <tr
       className={`border-b border-border/50 hover:bg-muted/30 cursor-pointer ${
-        isSelected ? "bg-teal-500/10" : ""
+        isSelected ? "bg-purple-500/10" : ""
       }`}
       onClick={onSelect}
     >
@@ -263,12 +263,12 @@ function SessionsFooter({
     <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
       <p className="text-sm text-muted-foreground">
         {sessionCount} session{sessionCount !== 1 ? "s" : ""}
-        {selectedSession ? <span className="text-teal-400 ml-2">• Selected</span> : null}
+        {selectedSession ? <span className="text-purple-400 ml-2">• Selected</span> : null}
       </p>
       <Button
         onClick={onAnalyze}
         disabled={!selectedSession || isAnalyzing}
-        className="bg-teal-600 hover:bg-teal-700"
+        className="bg-purple-600 hover:bg-purple-700"
       >
         {isAnalyzing ? (
           <Loader2 className="h-4 w-4 mr-2 animate-spin" />

@@ -95,7 +95,7 @@ export function AuthCard({
     <Card className={`w-full ${compact ? "max-w-sm" : "max-w-md"} border-border bg-card`}>
       <CardHeader className={`space-y-1 text-center ${compact ? "pb-4" : ""}`}>
         {!compact && (
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-teal-500/20">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-500/20">
             <span className="text-3xl">🧠</span>
           </div>
         )}
@@ -183,7 +183,7 @@ export function AuthCard({
               type="submit"
               className={`w-full ${
                 compact ? "h-10" : "h-12"
-              } text-base bg-teal-600 hover:bg-teal-700`}
+              } text-base bg-purple-600 hover:bg-purple-700`}
               disabled={loading}
             >
               Get Started

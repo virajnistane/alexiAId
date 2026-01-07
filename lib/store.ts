@@ -60,6 +60,21 @@ export interface SessionDetails {
   improvement_results?: ImprovementResults;
 }
 
+export interface JournalEntry {
+  id: string;
+  userId: string;
+  date: string; // ISO 8601 timestamp
+  emotions: string[]; // Array of emotion names
+  intensity: 1 | 2 | 3 | 4 | 5; // 1=very low, 5=very high
+  situation: string; // What happened
+  thoughts: string; // What you were thinking
+  bodySensations: string; // Physical sensations
+  notes?: string; // Additional notes
+  tags?: string[]; // Optional tags for categorization
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface AppState {
   // User
   user: User | null;
@@ -78,6 +93,9 @@ export interface AppState {
 
   // Session details (keyed by sessionId)
   sessionDetails: Record<string, SessionDetails>;
+
+  // Journal entries
+  journalEntries: JournalEntry[];
 }
 
 export interface AppActions {
@@ -106,6 +124,18 @@ export interface AppActions {
   updateSessionDetails: (sessionId: string, details: Partial<SessionDetails>) => void;
   getSessionDetails: (sessionId: string) => SessionDetails | undefined;
 
+  // Journal actions
+  addJournalEntry: (entry: Omit<JournalEntry, "id" | "createdAt" | "updatedAt">) => void;
+  updateJournalEntry: (id: string, updates: Partial<Omit<JournalEntry, "id" | "userId" | "createdAt">>) => void;
+  deleteJournalEntry: (id: string) => void;
+  getJournalEntry: (id: string) => JournalEntry | undefined;
+  getJournalEntriesByDateRange: (startDate: string, endDate: string) => JournalEntry[];
+
+  // Data control actions
+  exportData: () => string;
+  importData: (jsonData: string) => boolean;
+  clearUserData: (userId: string) => void;
+
   // Bulk operations
   setRawState: (state: Partial<AppState>) => void;
   clearAll: () => void;
@@ -126,6 +156,7 @@ const initialState: AppState = {
   assessmentSessions: [],
   coachSessions: [],
   sessionDetails: {},
+  journalEntries: [],
 };
 
 // =============================================================================
@@ -216,6 +247,98 @@ export const useAppStore = create<AppStore>()(
         })),
 
       getSessionDetails: (sessionId) => get().sessionDetails[sessionId],
+
+      // Journal actions
+      addJournalEntry: (entry) =>
+        set((state) => {
+          const newEntry: JournalEntry = {
+            ...entry,
+            id: `journal-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+          return {
+            journalEntries: [...state.journalEntries, newEntry],
+          };
+        }),
+
+      updateJournalEntry: (id, updates) =>
+        set((state) => ({
+          journalEntries: state.journalEntries.map((entry) =>
+            entry.id === id
+              ? { ...entry, ...updates, updatedAt: new Date().toISOString() }
+              : entry
+          ),
+        })),
+
+      deleteJournalEntry: (id) =>
+        set((state) => ({
+          journalEntries: state.journalEntries.filter((entry) => entry.id !== id),
+        })),
+
+      getJournalEntry: (id) => get().journalEntries.find((entry) => entry.id === id),
+
+      getJournalEntriesByDateRange: (startDate, endDate) =>
+        get().journalEntries.filter((entry) => {
+          const entryDate = new Date(entry.date).getTime();
+          const start = new Date(startDate).getTime();
+          const end = new Date(endDate).getTime();
+          return entryDate >= start && entryDate <= end;
+        }),
+
+      // Data control actions
+      exportData: () => {
+        const state = get();
+        const exportData = {
+          version: "1.0",
+          exportDate: new Date().toISOString(),
+          data: {
+            user: state.user,
+            userPersonalityType: state.userPersonalityType,
+            userPersonalityAssessment: state.userPersonalityAssessment,
+            userPersonalitySessionId: state.userPersonalitySessionId,
+            assessmentSessions: state.assessmentSessions,
+            coachSessions: state.coachSessions,
+            sessionDetails: state.sessionDetails,
+            journalEntries: state.journalEntries,
+          },
+        };
+        return JSON.stringify(exportData, null, 2);
+      },
+
+      importData: (jsonData) => {
+        try {
+          const parsed = JSON.parse(jsonData);
+          if (!parsed.data || !parsed.version) {
+            console.error("Invalid data format");
+            return false;
+          }
+          
+          const { data } = parsed;
+          set({
+            user: data.user || null,
+            userPersonalityType: data.userPersonalityType || null,
+            userPersonalityAssessment: data.userPersonalityAssessment || null,
+            userPersonalitySessionId: data.userPersonalitySessionId || null,
+            assessmentSessions: data.assessmentSessions || [],
+            coachSessions: data.coachSessions || [],
+            sessionDetails: data.sessionDetails || {},
+            journalEntries: data.journalEntries || [],
+          });
+          return true;
+        } catch (error) {
+          console.error("Failed to import data:", error);
+          return false;
+        }
+      },
+
+      clearUserData: (userId) => {
+        set((state) => ({
+          journalEntries: state.journalEntries.filter((entry) => entry.userId !== userId),
+          // Keep sessions for now as they might not have userId
+          // Can be extended to clear user-specific sessions if needed
+        }));
+      },
 
       // Bulk operations
       setRawState: (newState) => set((state) => ({ ...state, ...newState })),

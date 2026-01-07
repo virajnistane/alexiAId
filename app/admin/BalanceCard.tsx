@@ -27,7 +27,7 @@ export function BalanceCard({ balance, isLoading, onRefresh }: BalanceCardProps)
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Wallet className="h-5 w-5 text-teal-400" />
+            <Wallet className="h-5 w-5 text-purple-400" />
             <CardTitle className="text-lg">Available Minutes</CardTitle>
           </div>
           <Button variant="ghost" size="sm" onClick={onRefresh} disabled={isLoading}>

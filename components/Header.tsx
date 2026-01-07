@@ -45,8 +45,14 @@ export default function Header() {
             <NavLink href={ROUTES.RESULTS} active={isActive(ROUTES.RESULTS)}>
               My Progress
             </NavLink>
+            <NavLink href={ROUTES.JOURNAL} active={isActive(ROUTES.JOURNAL)}>
+              Journal
+            </NavLink>
             <NavLink href={ROUTES.COACH} active={isActive(ROUTES.COACH)}>
               Coach
+            </NavLink>
+            <NavLink href={ROUTES.SETTINGS} active={isActive(ROUTES.SETTINGS)}>
+              Settings
             </NavLink>
           </nav>
 
@@ -55,8 +61,8 @@ export default function Header() {
             {currentUser ? (
               <>
                 <div className="hidden sm:flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-teal-500/20 flex items-center justify-center">
-                    <span className="text-sm font-medium text-teal-400">
+                  <div className="h-8 w-8 rounded-full bg-purple-500/20 flex items-center justify-center">
+                    <span className="text-sm font-medium text-purple-400">
                       {getUserName().charAt(0).toUpperCase()}
                     </span>
                   </div>
@@ -73,7 +79,7 @@ export default function Header() {
               </>
             ) : (
               <Link href={ROUTES.SIGNIN}>
-                <Button size="sm" className="bg-teal-600 hover:bg-teal-700">
+                <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
                   Sign In
                 </Button>
               </Link>
@@ -99,7 +105,7 @@ function NavLink({
       href={href}
       className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
         active
-          ? "text-teal-400 bg-teal-500/10"
+          ? "text-purple-400 bg-purple-500/10"
           : "text-muted-foreground hover:text-foreground hover:bg-accent"
       }`}
     >

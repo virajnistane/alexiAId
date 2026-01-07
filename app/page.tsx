@@ -53,13 +53,15 @@ function HeroSection() {
   return (
     <section className="container mx-auto px-4 py-16 md:py-24">
       <div className="mx-auto max-w-4xl text-center">
-        <div className="mb-6 inline-flex items-center rounded-full bg-teal-500/20 px-4 py-1.5 text-sm font-medium text-teal-400">
-          <span className="mr-2">🧠</span>
-          AI-Powered Emotion Translator for Alexithymic Individuals
+        <div className="mb-6 inline-flex items-center rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 px-4 py-1.5 text-sm font-medium text-purple-400">
+          <span className="mr-2">💜</span>
+          AI-Powered Emotional Understanding for Alexithymia
         </div>
 
         <h1 className="mb-6 text-4xl font-bold tracking-tight text-foreground md:text-6xl lg:text-7xl">
-          <span className="text-gradient">{AppConfig.app.name}</span>
+          <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            {AppConfig.app.name}
+          </span>
         </h1>
 
         <p className="mb-10 text-lg text-muted-foreground md:text-xl max-w-2xl mx-auto">
@@ -69,7 +71,7 @@ function HeroSection() {
 
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Link href={ROUTES.TEST}>
-            <Button size="lg" className="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 text-white">
+            <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0">
               Start Emotion Assessment
             </Button>
           </Link>
@@ -77,14 +79,14 @@ function HeroSection() {
             <Button
               size="lg"
               variant="outline"
-              className="w-full sm:w-auto border-border hover:bg-accent"
+              className="w-full sm:w-auto border-purple-300 dark:border-purple-700 hover:bg-purple-50 dark:hover:bg-purple-950/30"
             >
               Talk to Your Coach
             </Button>
           </Link>
         </div>
 
-        <p className="mt-6 text-sm text-muted-foreground">Personalized support in understanding your emotional world</p>
+        <p className="mt-6 text-sm text-muted-foreground">Personalized support in understanding your emotional world 💭</p>
       </div>
     </section>
   );
@@ -100,7 +102,7 @@ function FeaturesSection() {
       step: "1️⃣",
       title: "Describe Situations",
       description: "Share your experiences and physical sensations with our understanding AI.",
-      bgColor: "bg-teal-500/20",
+      bgColor: "bg-purple-500/20",
     },
     {
       step: "2️⃣",
@@ -173,7 +175,7 @@ function MBTITypesSection({ onSelectType }: { onSelectType: (type: MBTIType) => 
     { emoji: "😨", title: "Fear", description: "Rapid heartbeat, cold sweat", color: "hover:border-purple-500/60 hover:bg-purple-500/10" },
     { emoji: "🤔", title: "Confusion", description: "Uncertainty, mental fog", color: "hover:border-gray-500/60 hover:bg-gray-500/10" },
     { emoji: "😮", title: "Surprise", description: "Sudden alertness, wide eyes", color: "hover:border-orange-500/60 hover:bg-orange-500/10" },
-    { emoji: "😌", title: "Calm", description: "Relaxed, steady breathing", color: "hover:border-teal-500/60 hover:bg-teal-500/10" },
+    { emoji: "😌", title: "Calm", description: "Relaxed, steady breathing", color: "hover:border-purple-500/60 hover:bg-purple-500/10" },
   ];
 
   return (
@@ -216,20 +218,20 @@ function MBTITypesSection({ onSelectType }: { onSelectType: (type: MBTIType) => 
 function CTASection() {
   return (
     <section className="container mx-auto px-4 py-16">
-      <div className="mx-auto max-w-5xl rounded-2xl bg-gradient-to-r from-teal-600 to-cyan-600 p-10 text-center">
+      <div className="mx-auto max-w-5xl rounded-3xl bg-gradient-to-br from-purple-600 via-pink-600 to-purple-700 p-10 text-center shadow-2xl shadow-purple-500/20">
         <h2 className="mb-3 text-2xl font-bold text-white md:text-3xl">
-          Ready to Understand Your Emotions?
+          Ready to Understand Your Emotions? 💜
         </h2>
-        <p className="mb-6 text-teal-100/90">
+        <p className="mb-6 text-purple-100">
           Begin your journey to emotional awareness and expression with AI-powered support
         </p>
         <Link href={ROUTES.TEST}>
           <Button
             size="lg"
             variant="secondary"
-            className="bg-white text-teal-700 hover:bg-gray-100"
+            className="bg-white text-purple-700 hover:bg-purple-50 font-semibold"
           >
-            Start Your Journey
+            Start Your Journey ✨
           </Button>
         </Link>
       </div>
@@ -251,7 +253,7 @@ function Footer() {
             href="https://www.toughtongueai.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-teal-400 hover:text-teal-300 hover:underline"
+            className="text-purple-400 hover:text-purple-300 hover:underline"
           >
             ToughTongue AI
           </a>
@@ -261,7 +263,7 @@ function Footer() {
             href="https://docs.toughtongueai.com/developer/starters/nextjs"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-teal-400"
+            className="hover:text-purple-400"
           >
             Template Documentation
           </a>
@@ -290,7 +292,7 @@ function PersonalityTypeDialog({ type, onClose }: { type: MBTIType | null; onClo
               <DialogTitle className="text-2xl text-foreground">
                 {type} - {details.name}
               </DialogTitle>
-              <p className="text-teal-400 font-semibold">{details.nickname}</p>
+              <p className="text-purple-400 font-semibold">{details.nickname}</p>
             </div>
           </div>
           <DialogDescription className="text-base text-muted-foreground leading-relaxed">
@@ -314,7 +316,7 @@ function TraitsList({ traits }: { traits: string[] }) {
       <h4 className="font-semibold text-foreground mb-2">Key Traits</h4>
       <div className="flex flex-wrap gap-2">
         {traits.map((trait) => (
-          <span key={trait} className="px-3 py-1 bg-teal-500/20 text-teal-300 rounded-full text-sm">
+          <span key={trait} className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
             {trait}
           </span>
         ))}
@@ -344,7 +346,7 @@ function DialogCTA() {
     <div className="pt-4 border-t border-border">
       <p className="text-sm text-muted-foreground mb-3">Want to better understand your emotions?</p>
       <Link href={ROUTES.TEST}>
-        <Button className="w-full bg-teal-600 hover:bg-teal-700 text-white">
+        <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
           Start Emotion Assessment
         </Button>
       </Link>
