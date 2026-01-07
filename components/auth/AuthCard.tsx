@@ -43,8 +43,11 @@ export function AuthCard({
       await signInWithGoogle();
       onSuccess?.();
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to sign in with Google";
-      setError(message);
+      // Only show error if one was actually thrown
+      // (popup-closed-by-user returns silently without throwing)
+      if (err instanceof Error) {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
