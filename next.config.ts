@@ -8,7 +8,7 @@ const ContentSecurityPolicy = `
   img-src * blob: data:;
   connect-src * https://accounts.google.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;
   font-src 'self' https://fonts.gstatic.com;
-  frame-src app.toughtongueai.com *.cloudflare.com challenges.cloudflare.com https://accounts.google.com;
+  frame-src app.toughtongueai.com *.cloudflare.com challenges.cloudflare.com https://accounts.google.com https://alexi-aid.firebaseapp.com;
   worker-src 'self' blob:;
   script-src-elem 'self' 'unsafe-inline' *.cloudflare.com https://accounts.google.com https://apis.google.com;
 `;

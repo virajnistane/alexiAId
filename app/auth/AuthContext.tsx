@@ -22,7 +22,7 @@ interface AuthContextType {
   // Google auth
   signInWithGoogle: () => Promise<void>;
   // Local user auth
-  signInAsLocalUser: (name: string) => void;
+  signInAsLocalUser: (name: string, email: string) => void;
   // Sign out
   logout: () => Promise<void>;
   // Helpers
@@ -66,14 +66,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
-        // Sync Firebase user to store
-        setStoreUser({
-          id: firebaseUser.uid,
-          name: firebaseUser.displayName || firebaseUser.email?.split("@")[0] || "User",
-          email: firebaseUser.email || undefined,
-          type: "firebase",
-          createdAt: new Date().toISOString(),
-        });
+        // Sync Firebase user to store (only if not already set to prevent loops)
+        const currentStoreUser = useAppStore.getState().user;
+        if (!currentStoreUser || currentStoreUser.id !== firebaseUser.uid) {
+          setStoreUser({
+            id: firebaseUser.uid,
+            name: firebaseUser.displayName || firebaseUser.email?.split("@")[0] || "User",
+            email: firebaseUser.email || undefined,
+            type: "firebase",
+            createdAt: new Date().toISOString(),
+          });
+        }
         setCurrentUser({ type: "firebase", user: firebaseUser });
       } else {
         // Check again for local user from store
@@ -88,7 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     return unsubscribe;
-  }, [storeUser, setStoreUser]);
+  }, [setStoreUser]); // Remove storeUser from dependencies to prevent loop
 
   const signInWithGoogle = async () => {
     if (!auth) {
@@ -133,10 +136,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signInAsLocalUser = (name: string) => {
+  const signInAsLocalUser = (name: string, email: string) => {
     const localUser: StoreUser = {
       id: `local-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       name: name.trim(),
+      email: email.trim(),
       type: "local",
       createdAt: new Date().toISOString(),
     };

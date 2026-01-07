@@ -31,6 +31,7 @@ export function AuthCard({
 }: AuthCardProps) {
   const [mode, setMode] = useState<AuthMode>("choose");
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { signInWithGoogle, signInAsLocalUser } = useAuth();
@@ -67,7 +68,19 @@ export function AuthCard({
       return;
     }
 
-    signInAsLocalUser(name.trim());
+    if (!email.trim()) {
+      setError("Please enter your email");
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    signInAsLocalUser(name.trim(), email.trim());
     onSuccess?.();
   };
 
@@ -75,7 +88,7 @@ export function AuthCard({
     if (description) return description;
     return mode === "choose"
       ? "Choose how you'd like to continue"
-      : "Enter your name to get started";
+      : "Enter your details to get started";
   };
 
   return (
@@ -133,7 +146,7 @@ export function AuthCard({
           <form onSubmit={handleLocalSignIn} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="auth-name" className="text-sm font-medium">
-                What should we call you?
+                Name
               </label>
               <Input
                 id="auth-name"
@@ -142,6 +155,20 @@ export function AuthCard({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 autoFocus
+                className={compact ? "h-10" : "h-12"}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="auth-email" className="text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id="auth-email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className={compact ? "h-10" : "h-12"}
               />
             </div>
@@ -170,6 +197,7 @@ export function AuthCard({
                 setMode("choose");
                 setError("");
                 setName("");
+                setEmail("");
               }}
             >
               ← Back to options
