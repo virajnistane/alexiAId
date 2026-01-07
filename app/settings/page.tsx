@@ -18,7 +18,7 @@ import {
 
 export default function SettingsPage() {
   const { currentUser } = useAuth();
-  const { exportData, importData, clearUserData, clearAll } = useAppStore();
+  const { exportData, importData, clearUserData, clearAll, logActivity } = useAppStore();
   const [showClearDialog, setShowClearDialog] = useState(false);
   const [showClearAllDialog, setShowClearAllDialog] = useState(false);
   const [importStatus, setImportStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
@@ -39,6 +39,15 @@ export default function SettingsPage() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
+      
+      // Log activity
+      logActivity({
+        userId,
+        userName: currentUser?.type === "local" ? currentUser.user.name : currentUser?.user.displayName || "User",
+        userEmail: (currentUser?.type === "local" ? currentUser.user.email : currentUser?.user.email) || undefined,
+        action: "export_data",
+        details: "Exported all data to JSON",
+      });
     } catch (error) {
       console.error("Failed to export data:", error);
       alert("Failed to export data. Please try again.");
@@ -59,6 +68,15 @@ export default function SettingsPage() {
           setImportStatus({
             type: "success",
             message: "Data imported successfully! Your data has been restored.",
+          });
+          
+          // Log activity
+          logActivity({
+            userId,
+            userName: currentUser?.type === "local" ? currentUser.user.name : currentUser?.user.displayName || "User",
+            userEmail: (currentUser?.type === "local" ? currentUser.user.email : currentUser?.user.email) || undefined,
+            action: "import_data",
+            details: "Imported data from JSON file",
           });
         } else {
           setImportStatus({
@@ -84,9 +102,27 @@ export default function SettingsPage() {
   const handleClearUserData = () => {
     clearUserData(userId);
     setShowClearDialog(false);
+    
+    // Log activity
+    logActivity({
+      userId,
+      userName: currentUser?.type === "local" ? currentUser.user.name : currentUser?.user.displayName || "User",
+      userEmail: (currentUser?.type === "local" ? currentUser.user.email : currentUser?.user.email) || undefined,
+      action: "clear_data",
+      details: "Cleared personal data",
+    });
   };
 
   const handleClearAllData = () => {
+    // Log activity before clearing (since it will clear the logs too)
+    logActivity({
+      userId,
+      userName: currentUser?.type === "local" ? currentUser.user.name : currentUser?.user.displayName || "User",
+      userEmail: (currentUser?.type === "local" ? currentUser.user.email : currentUser?.user.email) || undefined,
+      action: "clear_data",
+      details: "Cleared all data including logs",
+    });
+    
     clearAll();
     setShowClearAllDialog(false);
   };

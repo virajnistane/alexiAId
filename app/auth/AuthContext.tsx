@@ -48,6 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Store for local user persistence
   const storeUser = useAppStore((s) => s.user);
   const setStoreUser = useAppStore((s) => s.setUser);
+  const logActivity = useAppStore((s) => s.logActivity);
 
   // Check for local user on mount
   useEffect(() => {
@@ -107,6 +108,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log("Attempting Google Sign-In...");
       const result = await signInWithPopup(auth, provider);
       console.log("✅ Sign-in successful:", result.user.email);
+      
+      // Log activity
+      logActivity({
+        userId: result.user.uid,
+        userName: result.user.displayName || result.user.email?.split("@")[0] || "User",
+        userEmail: result.user.email || undefined,
+        action: "sign_in",
+        details: "Signed in with Google",
+      });
     } catch (error: any) {
       // Handle popup closed by user silently
       if (error.code === 'auth/popup-closed-by-user') {
@@ -146,9 +156,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     setStoreUser(localUser);
     setCurrentUser({ type: "local", user: localUser });
+    
+    // Log activity
+    logActivity({
+      userId: localUser.id,
+      userName: localUser.name,
+      userEmail: localUser.email,
+      action: "sign_in",
+      details: "Signed in as guest",
+    });
   };
 
   const logout = async () => {
+    // Log activity before clearing user
+    if (currentUser) {
+      const userId = currentUser.type === "local" ? currentUser.user.id : currentUser.user.uid;
+      const userName =
+        currentUser.type === "local"
+          ? currentUser.user.name
+          : currentUser.user.displayName || currentUser.user.email?.split("@")[0] || "User";
+      const userEmail =
+        currentUser.type === "local" ? currentUser.user.email : currentUser.user.email;
+
+      logActivity({
+        userId,
+        userName,
+        userEmail: userEmail || undefined,
+        action: "sign_out",
+        details: "Signed out",
+      });
+    }
+
     // Clear user from store
     setStoreUser(null);
 

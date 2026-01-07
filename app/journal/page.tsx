@@ -18,19 +18,40 @@ import {
 
 export default function JournalPage() {
   const { currentUser } = useAuth();
-  const { journalEntries, addJournalEntry, updateJournalEntry, deleteJournalEntry } = useAppStore();
+  const { journalEntries, addJournalEntry, updateJournalEntry, deleteJournalEntry, logActivity } = useAppStore();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<JournalEntry | null>(null);
 
   const userId =
     currentUser?.type === "local" ? currentUser.user.id : currentUser?.user.uid || "";
+  const userName =
+    currentUser?.type === "local"
+      ? currentUser.user.name
+      : currentUser?.user.displayName || currentUser?.user.email?.split("@")[0] || "User";
+  const userEmail =
+    currentUser?.type === "local" ? currentUser.user.email : currentUser?.user.email;
   const userEntries = journalEntries.filter((entry: JournalEntry) => entry.userId === userId);
 
   const handleSave = (data: Omit<JournalEntry, "id" | "createdAt" | "updatedAt">) => {
     if (editingEntry) {
       updateJournalEntry(editingEntry.id, data);
+      logActivity({
+        userId,
+        userName,
+        userEmail: userEmail || undefined,
+        action: "update_journal",
+        details: `Updated journal entry with emotions: ${data.emotions.join(", ")}`,
+        metadata: { entryId: editingEntry.id },
+      });
     } else {
       addJournalEntry({ ...data, userId });
+      logActivity({
+        userId,
+        userName,
+        userEmail: userEmail || undefined,
+        action: "create_journal",
+        details: `Created journal entry with emotions: ${data.emotions.join(", ")}`,
+      });
     }
     setIsFormOpen(false);
     setEditingEntry(null);
@@ -39,6 +60,18 @@ export default function JournalPage() {
   const handleEdit = (entry: JournalEntry) => {
     setEditingEntry(entry);
     setIsFormOpen(true);
+  };
+
+  const handleDelete = (id: string) => {
+    deleteJournalEntry(id);
+    logActivity({
+      userId,
+      userName,
+      userEmail: userEmail || undefined,
+      action: "delete_journal",
+      details: "Deleted journal entry",
+      metadata: { entryId: id },
+    });
   };
 
   const handleCancel = () => {
@@ -73,7 +106,7 @@ export default function JournalPage() {
         <JournalEntryList
           entries={userEntries}
           onEdit={handleEdit}
-          onDelete={deleteJournalEntry}
+          onDelete={handleDelete}
         />
       </div>
 

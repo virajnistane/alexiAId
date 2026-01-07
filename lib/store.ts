@@ -75,6 +75,17 @@ export interface JournalEntry {
   updatedAt: string;
 }
 
+export interface ActivityLog {
+  id: string;
+  userId: string;
+  userName: string;
+  userEmail?: string;
+  action: "sign_in" | "sign_out" | "start_assessment" | "complete_assessment" | "start_coaching" | "complete_coaching" | "create_journal" | "update_journal" | "delete_journal" | "export_data" | "import_data" | "clear_data";
+  details?: string; // Additional context
+  metadata?: Record<string, unknown>; // Session IDs, etc.
+  timestamp: string;
+}
+
 export interface AppState {
   // User
   user: User | null;
@@ -96,6 +107,9 @@ export interface AppState {
 
   // Journal entries
   journalEntries: JournalEntry[];
+
+  // Activity logs for admin tracking
+  activityLogs: ActivityLog[];
 }
 
 export interface AppActions {
@@ -131,6 +145,11 @@ export interface AppActions {
   getJournalEntry: (id: string) => JournalEntry | undefined;
   getJournalEntriesByDateRange: (startDate: string, endDate: string) => JournalEntry[];
 
+  // Activity tracking actions
+  logActivity: (activity: Omit<ActivityLog, "id" | "timestamp">) => void;
+  getActivityLogs: (filters?: { userId?: string; action?: string; startDate?: string; endDate?: string }) => ActivityLog[];
+  clearActivityLogs: () => void;
+
   // Data control actions
   exportData: () => string;
   importData: (jsonData: string) => boolean;
@@ -157,6 +176,7 @@ const initialState: AppState = {
   coachSessions: [],
   sessionDetails: {},
   journalEntries: [],
+  activityLogs: [],
 };
 
 // =============================================================================
@@ -285,6 +305,47 @@ export const useAppStore = create<AppStore>()(
           const end = new Date(endDate).getTime();
           return entryDate >= start && entryDate <= end;
         }),
+
+      // Activity tracking actions
+      logActivity: (activity) =>
+        set((state) => {
+          const newActivity: ActivityLog = {
+            ...activity,
+            id: `activity-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            timestamp: new Date().toISOString(),
+          };
+          return {
+            activityLogs: [...state.activityLogs, newActivity],
+          };
+        }),
+
+      getActivityLogs: (filters) => {
+        let logs = get().activityLogs;
+        
+        if (filters?.userId) {
+          logs = logs.filter((log) => log.userId === filters.userId);
+        }
+        if (filters?.action) {
+          logs = logs.filter((log) => log.action === filters.action);
+        }
+        if (filters?.startDate && filters?.endDate) {
+          const start = new Date(filters.startDate).getTime();
+          const end = new Date(filters.endDate).getTime();
+          logs = logs.filter((log) => {
+            const logTime = new Date(log.timestamp).getTime();
+            return logTime >= start && logTime <= end;
+          });
+        }
+        
+        return logs.sort((a, b) => 
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        );
+      },
+
+      clearActivityLogs: () =>
+        set((state) => ({
+          activityLogs: [],
+        })),
 
       // Data control actions
       exportData: () => {

@@ -20,14 +20,18 @@ import { ErrorBanner } from "@/components/StatusCards";
 import { AppConfig } from "@/lib/config";
 import { SCENARIOS, type SessionListItem, type Balance, type SessionAnalysis } from "@/lib/ttai";
 import { useAppStore } from "@/lib/store";
-import { ShieldOff, Trash2 } from "lucide-react";
+import { ShieldOff, Trash2, BarChart3, Activity as ActivityIcon, Database } from "lucide-react";
 
 import { AdminTokenInput } from "./AdminTokenInput";
 import { BalanceCard } from "./BalanceCard";
 import { SessionsCard } from "./SessionsCard";
 import { AnalysisResultsCard } from "./AnalysisResultsCard";
 import { LocalStoreEditor } from "./LocalStoreEditor";
+import { ActivityTracker } from "./ActivityTracker";
+import { UserStatsCard } from "./UserStatsCard";
 import { isWithinLast30Days } from "./utils";
+
+type TabType = "overview" | "activity" | "data";
 
 export default function AdminPage() {
   const adminToken = useAppStore((s) => s.adminToken);
@@ -53,6 +57,7 @@ export default function AdminPage() {
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [selectedScenario, setSelectedScenario] = useState<string>(SCENARIOS.PERSONALITY_TEST);
+  const [activeTab, setActiveTab] = useState<TabType>("overview");
 
   const isAuthenticated = !!adminToken;
 
@@ -174,36 +179,92 @@ export default function AdminPage() {
 
   // Main dashboard
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
       <AdminHeader onClearState={clearAll} />
 
       {stats.error ? <ErrorBanner message={stats.error} /> : null}
 
-      <BalanceCard
-        balance={stats.balance}
-        isLoading={stats.isLoadingBalance}
-        onRefresh={fetchBalance}
-      />
+      {/* Tabs */}
+      <div className="mb-6 border-b">
+        <div className="flex gap-1">
+          <button
+            onClick={() => setActiveTab("overview")}
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === "overview"
+                ? "border-purple-500 text-purple-400"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <BarChart3 className="h-4 w-4 inline mr-2" />
+            Overview
+          </button>
+          <button
+            onClick={() => setActiveTab("activity")}
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === "activity"
+                ? "border-purple-500 text-purple-400"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <ActivityIcon className="h-4 w-4 inline mr-2" />
+            Activity
+          </button>
+          <button
+            onClick={() => setActiveTab("data")}
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === "data"
+                ? "border-purple-500 text-purple-400"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Database className="h-4 w-4 inline mr-2" />
+            Data
+          </button>
+        </div>
+      </div>
 
-      <SessionsCard
-        sessions={stats.sessions}
-        isLoading={stats.isLoadingSessions}
-        selectedSession={selectedSession}
-        selectedScenario={selectedScenario}
-        copiedId={copiedId}
-        isAnalyzing={isAnalyzing}
-        onRefresh={fetchSessions}
-        onSelectSession={setSelectedSession}
-        onSelectScenario={setSelectedScenario}
-        onCopyId={copyToClipboard}
-        onAnalyze={handleAnalyze}
-      />
+      {/* Tab Content */}
+      {activeTab === "overview" && (
+        <div className="space-y-6">
+          <UserStatsCard />
 
-      {analysisResult || analysisError ? (
-        <AnalysisResultsCard result={analysisResult} error={analysisError} />
-      ) : null}
+          <BalanceCard
+            balance={stats.balance}
+            isLoading={stats.isLoadingBalance}
+            onRefresh={fetchBalance}
+          />
 
-      <LocalStoreEditor />
+          <SessionsCard
+            sessions={stats.sessions}
+            isLoading={stats.isLoadingSessions}
+            selectedSession={selectedSession}
+            selectedScenario={selectedScenario}
+            copiedId={copiedId}
+            isAnalyzing={isAnalyzing}
+            onRefresh={fetchSessions}
+            onSelectSession={setSelectedSession}
+            onSelectScenario={setSelectedScenario}
+            onCopyId={copyToClipboard}
+            onAnalyze={handleAnalyze}
+          />
+
+          {analysisResult || analysisError ? (
+            <AnalysisResultsCard result={analysisResult} error={analysisError} />
+          ) : null}
+        </div>
+      )}
+
+      {activeTab === "activity" && (
+        <div className="space-y-6">
+          <ActivityTracker />
+        </div>
+      )}
+
+      {activeTab === "data" && (
+        <div className="space-y-6">
+          <LocalStoreEditor />
+        </div>
+      )}
     </div>
   );
 }
