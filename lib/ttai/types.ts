@@ -47,6 +47,16 @@ export interface Balance {
 }
 
 // =============================================================================
+// Access Token Types
+// =============================================================================
+
+export interface AccessToken {
+  access_token: string;
+  expires_at: string;
+  scenario_id: string;
+}
+
+// =============================================================================
 // Iframe Event Types
 // =============================================================================
 
@@ -116,4 +126,5 @@ export interface EmbedUrlOptions {
   userEmail?: string;
   promptUserInfo?: boolean;
   dynamicVariables?: Record<string, string>;
+  accessToken?: string; // Scenario Access Token (SAT) for private scenarios
 }

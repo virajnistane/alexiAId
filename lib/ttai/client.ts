@@ -23,7 +23,7 @@ import { TOUGHTONGUE_ORIGIN, TOUGHTONGUE_EMBED_BASE, SCENARIOS } from "./constan
  * Builds an embed URL for a ToughTongue AI scenario
  */
 export function buildEmbedUrl(options: EmbedUrlOptions): string {
-  const { scenarioId, background, userName, userEmail, promptUserInfo, dynamicVariables } = options;
+  const { scenarioId, background, userName, userEmail, promptUserInfo, dynamicVariables, accessToken } = options;
 
   const url = new URL(`${TOUGHTONGUE_EMBED_BASE}/${scenarioId}`);
 
@@ -38,6 +38,9 @@ export function buildEmbedUrl(options: EmbedUrlOptions): string {
   }
   if (promptUserInfo && !userName) {
     url.searchParams.set("promptUserInfo", "true");
+  }
+  if (accessToken) {
+    url.searchParams.set("sat", accessToken);
   }
   if (dynamicVariables) {
     Object.entries(dynamicVariables).forEach(([key, value]) => {

@@ -83,6 +83,19 @@ export interface Balance {
   last_updated: string;
 }
 
+// Access Token types
+export interface CreateAccessTokenRequest {
+  scenario_id: string;
+  duration_hours?: number; // 1-24 hours, default 1
+  email?: string; // Optional user email, for org context use *@ORG-ID.toughtongueai.com
+}
+
+export interface CreateAccessTokenResponse {
+  access_token: string;
+  expires_at: string;
+  scenario_id: string;
+}
+
 // =============================================================================
 // Error Class
 // =============================================================================
@@ -178,6 +191,20 @@ export async function analyzeSession(request: AnalyzeSessionRequest): Promise<Se
   return apiRequest<SessionAnalysis>("/sessions/analyze", {
     method: "POST",
     body: { session_id: request.session_id },
+  });
+}
+
+/** Create a short-lived access token for embedding scenarios */
+export async function createAccessToken(
+  request: CreateAccessTokenRequest
+): Promise<CreateAccessTokenResponse> {
+  return apiRequest<CreateAccessTokenResponse>("/scenario-access-token", {
+    method: "POST",
+    body: {
+      scenario_id: request.scenario_id,
+      duration_hours: request.duration_hours || 1,
+      ...(request.email && { email: request.email }),
+    },
   });
 }
 
