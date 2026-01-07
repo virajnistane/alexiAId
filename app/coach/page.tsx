@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/PageHeader";
 import { TTAIIframe } from "@/components/TTAIIframe";
-import { buildCoachUrl, createIframeEventListener, SCENARIOS } from "@/lib/ttai";
+import { buildCoachUrl, buildPersonalityTestUrl, createIframeEventListener, SCENARIOS } from "@/lib/ttai";
 import { useAppStore } from "@/lib/store";
 import { AlertCircle, MessageCircle, Loader2, Play, Star, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -31,11 +31,12 @@ function CoachContent() {
   const { getUserName, getUserEmail } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [showCoach, setShowCoach] = useState(false);
+  const [showAssessment, setShowAssessment] = useState(false);
 
   // Store
-  const userPersonalityType = useAppStore((s) => s.userPersonalityType);
   const userPersonalityAssessment = useAppStore((s) => s.userPersonalityAssessment);
   const addCoachSession = useAppStore((s) => s.addCoachSession);
+  const addAssessmentSession = useAppStore((s) => s.addAssessmentSession);
   const updateSessionDetails = useAppStore((s) => s.updateSessionDetails);
 
   const hasAssessment = !!userPersonalityAssessment;
@@ -44,7 +45,50 @@ function CoachContent() {
     setIsLoading(false);
   }, []);
 
-  // Set up iframe event listener
+  // Set up iframe event listener for assessment
+  useEffect(() => {
+    if (!showAssessment) return;
+
+    const cleanup = createIframeEventListener({
+      onStart: (event) => {
+        console.log("Assessment session started:", event.data.session_id);
+        addAssessmentSession(event.data.session_id, {
+          scenarioId: SCENARIOS.PERSONALITY_TEST,
+          scenario_id: event.data.scenario_id,
+          created_at: new Date().toISOString(),
+          status: "active",
+        });
+      },
+      onStop: (event) => {
+        console.log("Assessment session stopped:", event.data.session_id);
+        updateSessionDetails(event.data.session_id, {
+          completed_at: new Date().toISOString(),
+          duration: event.data.duration_seconds,
+          status: "completed",
+        });
+      },
+      onTerminated: (event) => {
+        console.log("Assessment session terminated:", event.data.session_id);
+        updateSessionDetails(event.data.session_id, {
+          completed_at: new Date().toISOString(),
+          duration: event.data.duration_seconds,
+          status: "terminated",
+        });
+        setShowAssessment(false);
+      },
+      onSubmit: (event) => {
+        console.log("Assessment session data submitted:", event.data.session_id);
+        setShowAssessment(false);
+      },
+      onError: (error) => {
+        console.error("Assessment iframe error:", error);
+      },
+    });
+
+    return cleanup;
+  }, [showAssessment, addAssessmentSession, updateSessionDetails]);
+
+  // Set up iframe event listener for coach
   useEffect(() => {
     if (!showCoach) return;
 
@@ -87,6 +131,11 @@ function CoachContent() {
     return cleanup;
   }, [showCoach, addCoachSession, updateSessionDetails]);
 
+  const assessmentUrl = buildPersonalityTestUrl({
+    userName: getUserName(),
+    userEmail: getUserEmail(),
+  });
+
   const iframeUrl = buildCoachUrl({
     userName: getUserName(),
     userEmail: getUserEmail(),
@@ -97,15 +146,23 @@ function CoachContent() {
     return <LoadingView />;
   }
 
+  if (showAssessment) {
+    return (
+      <AssessmentIframeView
+        iframeUrl={assessmentUrl}
+        onEndSession={() => setShowAssessment(false)}
+      />
+    );
+  }
+
   if (!hasAssessment) {
-    return <AssessmentRequiredView />;
+    return <AssessmentRequiredView onStartAssessment={() => setShowAssessment(true)} />;
   }
 
   if (showCoach) {
     return (
       <CoachIframeView
         iframeUrl={iframeUrl}
-        personalityType={userPersonalityType}
         onEndSession={() => setShowCoach(false)}
       />
     );
@@ -113,7 +170,6 @@ function CoachContent() {
 
   return (
     <CoachLandingView
-      personalityType={userPersonalityType}
       personalityAssessment={userPersonalityAssessment}
       onStartCoach={() => setShowCoach(true)}
     />
@@ -145,7 +201,7 @@ function LoadingView() {
 // Assessment Required View
 // =============================================================================
 
-function AssessmentRequiredView() {
+function AssessmentRequiredView({ onStartAssessment }: { onStartAssessment: () => void }) {
   return (
     <div className="container mx-auto px-4 py-8 min-h-[70vh] flex flex-col items-center justify-center">
       <div className="mb-8">
@@ -167,12 +223,10 @@ function AssessmentRequiredView() {
         <CardContent className="space-y-4">
           <HowItWorksBox />
           <div className="flex gap-3">
-            <Link href={ROUTES.TEST} className="flex-1">
-              <Button className="w-full bg-teal-600 hover:bg-teal-700">
-                <Play className="h-4 w-4 mr-2" />
-                Start Assessment
-              </Button>
-            </Link>
+            <Button onClick={onStartAssessment} className="flex-1 bg-teal-600 hover:bg-teal-700">
+              <Play className="h-4 w-4 mr-2" />
+              Start Assessment
+            </Button>
             <Link href={ROUTES.RESULTS} className="flex-1">
               <Button variant="outline" className="w-full">
                 View Progress
@@ -205,16 +259,46 @@ function HowItWorksBox() {
 }
 
 // =============================================================================
+// Assessment Iframe View
+// =============================================================================
+
+function AssessmentIframeView({
+  iframeUrl,
+  onEndSession,
+}: {
+  iframeUrl: string;
+  onEndSession: () => void;
+}) {
+  return (
+    <div className="flex flex-col h-[calc(100vh-4rem)]">
+      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Emotion Awareness Assessment</h1>
+          <p className="text-muted-foreground text-sm">
+            Share your experiences to build emotional understanding
+          </p>
+        </div>
+        <Button variant="outline" size="sm" onClick={onEndSession}>
+          Cancel
+        </Button>
+      </div>
+
+      <div className="flex-1 container mx-auto px-4 pb-4">
+        <TTAIIframe src={iframeUrl} />
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
 // Coach Iframe View
 // =============================================================================
 
 function CoachIframeView({
   iframeUrl,
-  personalityType,
   onEndSession,
 }: {
   iframeUrl: string;
-  personalityType: string | null;
   onEndSession: () => void;
 }) {
   return (
@@ -223,9 +307,7 @@ function CoachIframeView({
         <div>
           <h1 className="text-2xl font-bold text-foreground">Your Emotion Coach</h1>
           <p className="text-muted-foreground text-sm">
-            {personalityType
-              ? `Talk to your coach about understanding and expressing emotions as a ${personalityType}`
-              : "Talk to your AI coach about emotional awareness and expression"}
+            Talk to your AI coach about understanding and expressing emotions
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={onEndSession}>
@@ -245,11 +327,9 @@ function CoachIframeView({
 // =============================================================================
 
 function CoachLandingView({
-  personalityType,
   personalityAssessment,
   onStartCoach,
 }: {
-  personalityType: string | null;
   personalityAssessment: string | null;
   onStartCoach: () => void;
 }) {
@@ -257,11 +337,7 @@ function CoachLandingView({
     <div className="container mx-auto px-4 py-8">
       <PageHeader
         title="Your Emotion Coach"
-        description={
-          personalityType
-            ? `Get personalized support in understanding and expressing emotions as a ${personalityType}`
-            : "Get personalized support in understanding and expressing your emotions"
-        }
+        description="Get personalized support in understanding and expressing your emotions"
       />
 
       <PersonalityProfileCard assessment={personalityAssessment} />
@@ -293,10 +369,10 @@ function PersonalityProfileCard({ assessment }: { assessment: string | null }) {
       <CardHeader>
         <div className="flex items-center gap-2">
           <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
-          <CardTitle className="text-teal-400">Your Emotional Profile</CardTitle>
+          <CardTitle className="text-teal-400">Your Emotion Awareness Profile</CardTitle>
         </div>
         <CardDescription className="text-teal-300/80">
-          Your coach will use this to provide personalized emotion guidance
+          Your coach will use this to provide personalized guidance on understanding emotions
         </CardDescription>
       </CardHeader>
       <CardContent>

@@ -19,9 +19,9 @@ export const TOUGHTONGUE_EMBED_BASE = `${TOUGHTONGUE_ORIGIN}/embed`;
  */
 export const SCENARIOS = {
   /** MBTI Personality Test scenario */
-  PERSONALITY_TEST: "69577496bd7c000fa3f4fc2a",
+  PERSONALITY_TEST: "695bca626e2f8f9c9c54c829",
   /** Personality Coach scenario - TODO: Replace with actual ID */
-  PERSONALITY_COACH: "6958f1a646e4227d62efbd61",
+  PERSONALITY_COACH: "695e33045d060235e03163d3",
 } as const;
 
 /**

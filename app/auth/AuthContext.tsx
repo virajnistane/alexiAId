@@ -5,6 +5,8 @@ import {
   User as FirebaseUser,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut as firebaseSignOut,
   onAuthStateChanged,
 } from "firebase/auth";
@@ -89,9 +91,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [storeUser, setStoreUser]);
 
   const signInWithGoogle = async () => {
-    if (!auth) throw new Error("Firebase auth not initialized");
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+    if (!auth) {
+      throw new Error("Firebase auth not initialized. Please check your Firebase configuration in .env.local");
+    }
+    
+    try {
+      const provider = new GoogleAuthProvider();
+      // Add additional scopes if needed
+      provider.addScope('email');
+      provider.addScope('profile');
+      
+      console.log("Attempting Google Sign-In...");
+      const result = await signInWithPopup(auth, provider);
+      console.log("✅ Sign-in successful:", result.user.email);
+    } catch (error: any) {
+      console.error("❌ Google Sign-In Error Details:", {
+        code: error.code,
+        message: error.message,
+        customData: error.customData,
+        stack: error.stack,
+        fullError: error
+      });
+      
+      // Log the raw error object
+      console.error("Raw error object:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+      
+      // Provide more helpful error messages
+      if (error.code === 'auth/internal-error') {
+        // Check if there's a more detailed message in customData
+        const details = error.customData?._tokenResponse?.error?.message || error.message;
+        throw new Error(`Firebase internal error: ${details}. This usually means:\n1. Google Sign-In is not properly enabled in Firebase Console\n2. OAuth consent screen is not configured\n3. Your domain is not authorized\n\nCheck the browser console for full error details.`);
+      } else if (error.code === 'auth/popup-blocked') {
+        throw new Error("Popup was blocked. Please allow popups for this site.");
+      } else if (error.code === 'auth/popup-closed-by-user') {
+        throw new Error("Sign-in cancelled.");
+      } else if (error.code === 'auth/unauthorized-domain') {
+        throw new Error("This domain is not authorized. Add it to Firebase Console → Authentication → Settings → Authorized domains.");
+      }
+      
+      // Throw the original error message for other cases
+      throw new Error(error.message || "Failed to sign in with Google");
+    }
   };
 
   const signInAsLocalUser = (name: string) => {
